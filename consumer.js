@@ -9,7 +9,7 @@ const io = socketIo(server);
 const PORT = 4000;
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');  // make sure to point to the correct path of your index.html
+    res.sendFile(__dirname + '/index.html');
 });
 
 
@@ -36,7 +36,6 @@ amqp.connect('amqp://localhost', (error, connection) => {
         channel.consume(queue, (msg) => {
             console.log('Received Message from Queue:', msg.content.toString());
             const notification = msg.content.toString();
-            console.log('notification', notification)
             io.emit('new-notification', notification);  // Sending the notification to all connected clients
         }, { noAck: true });
     });
