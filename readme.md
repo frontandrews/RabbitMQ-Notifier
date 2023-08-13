@@ -45,23 +45,16 @@ Requirements
 - Node
 - RabbitMQ
 
-Setup
+### Setup
 
 ```bash
 yarn install or npm install
 
 ```
 
-Running
-
-```bash
-yarn serve
-
-```
-
 ### Start the server:
 
-```node server```
+```yarn server```
 
 Open your browser and go to http://localhost:4000 to see notifications in real-time. Fill the form and press send.
 
