@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notification Receiver</title>
+    <style>
+        .notification {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+        extend: {
+            colors: {
+            }
+        }
+        }
+    }
+    </script>
+</head>
+<body class="bg-gray-100 p-10">
+
+    <h2 class="text-2xl font-bold mb-5">Notifications</h2>
+
+    <form id="notificationForm" class="bg-white p-6 rounded-md shadow-md">
+        <div class="mb-4">
+            <label for="title" class="block text-sm font-semibold text-gray-600">Title:</label>
+            <input type="text" id="title" name="title" class="mt-1 p-2 w-full border rounded-md" required>
+        </div>
+        <div class="mb-4">
+            <label for="message" class="block text-sm font-semibold text-gray-600">Message:</label>
+            <textarea id="message" name="message" class="mt-1 p-2 w-full border rounded-md h-32" required></textarea>
+        </div>
+        <button type="submit" class="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700">Send</button>
+    </form>
+
+
+    <ul id="notifications" class="mt-10"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        document.getElementById('notificationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const message = document.getElementById('message').value;
+
+            fetch('http://localhost:3000/send-notification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('title').value = '';
+                document.getElementById('message').value = '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+    <script>
+        const socket = io.connect('http://localhost:4000');
+
+        socket.on('new-notification', (notificationData) => {
+            const notification = JSON.parse(notificationData);
+
+            const li = document.createElement('li');
+            li.className = 'bg-white p-4 rounded-md mb-4 shadow border-l-4 border-blue-500';
+
+            const title = document.createElement('div');
+            title.className = 'font-bold mb-2 text-xl';
+            title.textContent = notification.title;
+
+            const message = document.createElement('div');
+            message.textContent = notification.message;
+
+            // Append title and message to the list item
+            li.appendChild(title);
+            li.appendChild(message);
+
+            // Append the list item to the notifications list
+            document.getElementById('notifications').appendChild(li);
+        });
+    </script>
+    
+</body>
+</html>

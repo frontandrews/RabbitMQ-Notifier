@@ -1,0 +1,20 @@
+{
+  "name": "notification-system",
+  "version": "1.0.0",
+  "description": "Real-time notification system using RabbitMQ, Express, and Socket.io",
+  "main": "producer.js",
+  "scripts": {
+    "server": "concurrently \"node producer.js\" \"node consumer.js\"",
+    "start-producer": "node producer.js",
+    "start-consumer": "node consumer.js"
+  },
+  "author": "Andrews Ribeiro Gomes",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "concurrently": "^8.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "socket.io": "^4.0.1"
+  }
+}
